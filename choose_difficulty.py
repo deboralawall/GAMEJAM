@@ -1,7 +1,11 @@
 import pygame
 import os
+import sys
 
-basepath = os.path.dirname(os.path.abspath(__file__))
+def get_resource_path(relative_path):
+    """Retorna o caminho absoluto para arquivos de recursos."""
+    base_path = getattr(sys, '_MEIPASS', os.path.abspath("."))
+    return os.path.join(base_path, relative_path)
 
 # Inicializar o Pygame
 pygame.init()
@@ -49,8 +53,7 @@ font = pygame.font.SysFont('Graduate', 30)
 def choose_difficulty():
     print("Escolhendo a dificuldade...")
     running = True
-    image_path = os.path.join(basepath, "imagens", "backgroundDificuldade.png")
-    background_image = pygame.image.load(image_path)
+    background_image = pygame.image.load(get_resource_path("imagens/backgroundDificuldade.png"))
 
     while running:
         #screen.fill(LIGHT_BLUE)
