@@ -16,7 +16,7 @@ BLUE = (0, 0, 255)
 LIGHT_BLUE = (173, 216, 230)
 
 # Fontes
-font = pygame.font.SysFont("Bangers", 40)
+font = pygame.font.SysFont("Comic Sans MS", 40)
 
 # Configurações de dificuldade
 difficulties = {
