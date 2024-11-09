@@ -63,7 +63,7 @@ def show_history():
         # Botão para voltar ao menu
         button_width, button_height = 200, 40
         back_button_x = (WIDTH - button_width) // 8.6
-        back_button_y = HEIGHT - 65
+        back_button_y = HEIGHT - 60
         draw_button("Menu", back_button_x, back_button_y, button_width, button_height, DARK_BLUE, BLUE, WHITE, back_to_menu)
         
         pygame.display.flip()
