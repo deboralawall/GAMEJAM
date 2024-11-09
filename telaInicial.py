@@ -24,22 +24,23 @@ button_font = pygame.font.SysFont('Arial', 40)
 options = ["Iniciar Jogo", "Instruções", "Sair"]
 
 # Função para desenhar o botão
-def draw_button(text, x, y, width, height, active_color, inactive_color, text_color, action=None):
+def draw_button(text, x, y, width, height, active_color, inactive_color, text_color, action=None, border_radius=15):
     mouse = pygame.mouse.get_pos()
     click = pygame.mouse.get_pressed()
     
     # Detecta se o mouse está sobre o botão
     if x < mouse[0] < x + width and y < mouse[1] < y + height:
-        pygame.draw.rect(screen, active_color, (x, y, width, height))
+        pygame.draw.rect(screen, active_color, (x, y, width, height), border_radius=border_radius)
         if click[0] == 1 and action:
             action()
     else:
-        pygame.draw.rect(screen, inactive_color, (x, y, width, height))
+        pygame.draw.rect(screen, inactive_color, (x, y, width, height), border_radius=border_radius)
     
     # Renderiza o texto do botão
     text_surface = button_font.render(text, True, text_color)
     text_rect = text_surface.get_rect(center=(x + width // 2, y + height // 2))
     screen.blit(text_surface, text_rect)
+
 
 
 def choose_difficulty():
@@ -72,8 +73,7 @@ def main_menu():
         # Desenha os botões do menu
         button_width, button_height = 300, 60
         gap = 20  # Espaço entre os botões
-        start_y = HEIGHT // 3
-        
+        start_y = HEIGHT // 2.5
         # Lista de botões com texto, posição e função associada
         buttons = [
             ("Iniciar Jogo", choose_difficulty),
