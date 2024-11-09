@@ -23,14 +23,23 @@ difficulties = {
     "Fácil": 2,     # Grade 2x2
     "Médio": 4,      # Grade 4x4
 }
-def draw_button(text, x, y, width, height, color):
-    button_rect = pygame.Rect(x, y, width, height)
-    pygame.draw.rect(screen, color, button_rect)
-    pygame.draw.rect(screen, WHITE, button_rect, 3)
-    button_text = font.render(text, True, WHITE)
-    screen.blit(button_text, (button_rect.x + (button_rect.width - button_text.get_width()) // 2,
-                              button_rect.y + (button_rect.height - button_text.get_height()) // 2))
-    return button_rect
+def draw_rounded_button(screen, text, x, y, width, height, color, font, border_radius=15):
+    # Desenha um botão com bordas arredondadas
+    pygame.draw.rect(screen, color, (x, y, width, height), border_radius=border_radius)
+    
+    # Renderiza o texto com a cor branca
+    button_text = font.render(text, True, (255, 255, 255))  # Branco
+    
+    # Centraliza o texto dentro do botão
+    text_x = x + (width - button_text.get_width()) // 2
+    text_y = y + (height - button_text.get_height()) // 2
+    
+    # Desenha o texto no botão
+    screen.blit(button_text, (text_x, text_y))
+    
+    # Retorna o retângulo do botão para verificações de clique
+    return pygame.Rect(x, y, width, height)
+font = pygame.font.SysFont('Comic Sans MS', 30)
 
 # Função para escolher a dificuldade
 def choose_difficulty():
@@ -42,12 +51,13 @@ def choose_difficulty():
         #screen.fill(LIGHT_BLUE)
         screen.blit(background_image, (0, 0))
 
-        draw_button("Voltar ao Menu", 50, HEIGHT - 80, 200, 50, BLUE)
+        button_rect = draw_rounded_button(screen, "Voltar ao Menu", 50, HEIGHT - 80, 200, 50, (0, 0, 255), font)
 
-        if pygame.mouse.get_pressed()[0]:
-            mouse_x, mouse_y = pygame.mouse.get_pos()
-            if 50 < mouse_x < 250 and HEIGHT - 80 < mouse_y < HEIGHT - 30:
-                # running = False
+        # Detecta clique no botão
+        if pygame.mouse.get_pressed()[0]:  # Verifica se o botão esquerdo do mouse foi pressionado
+            mouse_x, mouse_y = pygame.mouse.get_pos()  # Obtém posição do mouse
+            if button_rect.collidepoint(mouse_x, mouse_y):  # Verifica se o clique foi dentro do botão
+                # Importa e chama a função do menu principal
                 from telaInicial import main_menu
                 main_menu()
         # Título
