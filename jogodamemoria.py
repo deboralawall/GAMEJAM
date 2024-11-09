@@ -104,7 +104,7 @@ def draw_timer(screen, start_time):
     elapsed_time = (pygame.time.get_ticks() - start_time) // 1000  # Tempo em segundos
     
     # Define a fonte
-    font = pygame.font.SysFont('Comic Sans MS', 30)
+    font = pygame.font.SysFont('Graduate', 30)
 
     # Função auxiliar para desenhar texto com borda
     def draw_text_with_border(text, font, text_color, border_color, x, y, screen):
@@ -147,7 +147,7 @@ def draw_score(screen, stars, star_image):
     start_y = (HEIGHT - total_height) // 2  # Calcular a posição inicial para centralizar as estrelas na vertical
 
     # Desenhar a mensagem de parabéns
-    font = pygame.font.SysFont('Comic Sans MS', 70, bold=True)  # Fonte estilizada com 70 de tamanho
+    font = pygame.font.SysFont('Graduate', 70, bold=True)  # Fonte estilizada com 70 de tamanho
 
     # Função auxiliar para desenhar texto com borda
     def draw_text_with_border(text, font, text_color, border_color, x, y, screen):
@@ -196,7 +196,7 @@ def draw_rounded_button(screen, text, x, y, width, height, color, border_radius=
     pygame.draw.rect(screen, color, (x, y, width, height), border_radius=border_radius)
     
     # Define a fonte do texto
-    font = pygame.font.SysFont('Comic Sans MS', 30)
+    font = pygame.font.SysFont('Graduate', 30)
     
     # Renderiza o texto com cor branca
     text_surface = font.render(text, True, (255, 255, 255))  # Branco
@@ -208,8 +208,63 @@ def draw_rounded_button(screen, text, x, y, width, height, color, border_radius=
     # Desenha o texto no botão
     screen.blit(text_surface, (text_x, text_y))
 
+def draw_turn(screen, turn):
+    font = pygame.font.SysFont('Graduate', 30)
+    text_color = (250, 210, 61)  # Amarelo queimado
+    border_color = (84, 20, 16)  # Marrom
+
+    # Renderizar o texto principal e o texto de borda
+    turn_text = font.render(f'Turno: {turn}', True, text_color)
+    border_text = font.render(f'Turno: {turn}', True, border_color)
+
+    # Definir a posição para o canto superior esquerdo
+    x, y = 10, 10
+
+    # Desenhar a borda ao redor do texto
+    screen.blit(border_text, (x - 1, y))      # Esquerda
+    screen.blit(border_text, (x + 1, y))      # Direita
+    screen.blit(border_text, (x, y - 1))      # Cima
+    screen.blit(border_text, (x, y + 1))      # Baixo
+    screen.blit(border_text, (x - 1, y - 1))  # Canto superior esquerdo
+    screen.blit(border_text, (x + 1, y - 1))  # Canto superior direito
+    screen.blit(border_text, (x - 1, y + 1))  # Canto inferior esquerdo
+    screen.blit(border_text, (x + 1, y + 1))  # Canto inferior direito
+
+    # Desenhar o texto principal no topo da borda
+    screen.blit(turn_text, (x, y))
+
+
+def draw_best_time(screen, best_time):
+    font = pygame.font.SysFont('Graduate', 30)
+    text_color = (250, 210, 61)  # Amarelo queimado
+    border_color = (84, 20, 16)  # Marrom
+
+    if best_time == float('inf'):
+        best_time_text = font.render('Não há um melhor tempo!', True, text_color)
+        border_text = font.render('Não há um melhor tempo!', True, border_color)
+    else:
+        best_time_text = font.render(f'Melhor Tempo: {best_time} seg', True, text_color)
+        border_text = font.render(f'Melhor Tempo: {best_time} seg', True, border_color)
+
+    # Definir posição para o texto
+    x = (WIDTH - best_time_text.get_width()) // 1.15
+    y = HEIGHT - best_time_text.get_height() - 10 
+
+    # Desenhar a borda ao redor do texto
+    screen.blit(border_text, (x - 1, y))      # Esquerda
+    screen.blit(border_text, (x + 1, y))      # Direita
+    screen.blit(border_text, (x, y - 1))      # Cima
+    screen.blit(border_text, (x, y + 1))      # Baixo
+    screen.blit(border_text, (x - 1, y - 1))  # Canto superior esquerdo
+    screen.blit(border_text, (x + 1, y - 1))  # Canto superior direito
+    screen.blit(border_text, (x - 1, y + 1))  # Canto inferior esquerdo
+    screen.blit(border_text, (x + 1, y + 1))  # Canto inferior direito
+
+    # Desenhar o texto principal no topo
+    screen.blit(best_time_text, (x, y))
+
 # Função principal do jogo
-def memory_game(size):
+def memory_game(size, turn=1, best_time=float('inf')):
     GRID_SIZE = size
     screen = pygame.display.set_mode((WIDTH, HEIGHT))
     pygame.display.set_caption("Memória Aquática")
@@ -243,6 +298,9 @@ def memory_game(size):
 
 
         draw_rounded_button(screen, "Voltar", 50, HEIGHT - 80, 200, 50, (0, 0, 255))  # Botão azul
+
+        draw_turn(screen, turn)  # Desenha o turno
+        draw_best_time(screen, best_time)  # Desenha o melhor tempo
 
         # Detecta clique no botão
         if pygame.mouse.get_pressed()[0]:  # Verifica se o botão esquerdo do mouse foi pressionado
@@ -332,8 +390,13 @@ def memory_game(size):
             draw_score(screen, stars, star_image)  # Exibe as estrelas
             pygame.display.flip()
             pygame.time.wait(2000)  # Exibe o placar final por 2 segundos
+            # Atualiza o melhor tempo
+            if elapsed_time < best_time:
+                best_time = elapsed_time
+
+            turn += 1  # Incrementa o turno após cada rodada
             running = False
-            memory_game(size)
+            memory_game(size, turn, best_time)
 
     pygame.quit()
 
