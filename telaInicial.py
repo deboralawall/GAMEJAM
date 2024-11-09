@@ -1,6 +1,8 @@
 import pygame
 import sys
 
+basepath = os.path.dirname(os.path.abspath(__file__))
+
 # Inicializando o Pygame
 pygame.init()
 
@@ -60,7 +62,8 @@ def quit_game():
 # Função principal para exibir o menu
 def main_menu():
     running = True
-    background_image = pygame.image.load('imagens/backgroundInicial.png')
+    image_path = os.path.join(basepath, "imagens", "backgroundInicial.png")
+    background_image = pygame.image.load(image_path)
     while running:
 
         # screen.fill(LIGHT_GRAY)
