@@ -78,7 +78,7 @@ def create_deck(size):
 def draw_cards(screen, deck, revealed_cards, images, size, show_all=False):
     # Calcula a largura e a altura total do grid de cartas
     GRID_SIZE = size
-    print("Size:", size)
+    # print("Size:", size)
     total_width = GRID_SIZE * CARD_WIDTH + (GRID_SIZE - 1) * MARGIN
     total_height = (len(deck) // GRID_SIZE) * CARD_HEIGHT + (len(deck) // GRID_SIZE - 1) * MARGIN
 
@@ -98,11 +98,18 @@ def draw_cards(screen, deck, revealed_cards, images, size, show_all=False):
             pygame.draw.rect(screen, BLUE, rect)  # Fundo da carta
             pygame.draw.rect(screen, WHITE, rect, 5)  # Borda da carta
 
+
 def draw_timer(screen, start_time):
-    elapsed_time = pygame.time.get_ticks() // 1000  # Tempo em segundos
+    # Calcula o tempo de jogo passado desde o início
+    elapsed_time = (pygame.time.get_ticks() - start_time) // 1000  # Tempo em segundos
     font = pygame.font.SysFont('Arial', 30)
+    
+    # Renderiza o texto com o tempo decorrido
     time_text = font.render(f'{elapsed_time} seg', True, WHITE)
-    screen.blit(time_text, (WIDTH - 150, 10))  # Posiciona no canto superior direito
+    
+    # Exibe o tempo no canto superior direito da tela
+    screen.blit(time_text, (WIDTH - 150, 10))  
+
 
 # Função para desenhar o placar de estrelas com a mensagem de parabéns
 def draw_score(screen, stars, star_image):
@@ -160,6 +167,7 @@ def memory_game(size):
     correct_sound = load_sounds()
 
     start_time = pygame.time.get_ticks()  # Tempo de início do jogo
+    # print("start_time" , start_time)
 
     # Loop principal do jogo
     running = True
@@ -173,6 +181,8 @@ def memory_game(size):
         # Chama a função para desenhar as cartas, agora com o parâmetro 'show_all' sendo False enquanto o jogo não acabar
         draw_cards(screen, deck, revealed_cards, images, size, show_all=False)
         draw_timer(screen, start_time)  # Exibe o tempo
+        # print("screen:", screen)
+        # print("start_time,", start_time)
         
         pygame.display.flip()
         pygame.time.Clock().tick(FPS)
