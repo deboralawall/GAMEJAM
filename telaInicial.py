@@ -20,8 +20,8 @@ LIGHT_GRAY = (211, 211, 211)
 DARK_GRAY = (169, 169, 169)
 
 # Fontes
-title_font = pygame.font.SysFont('Comic Sans MS', 60)
-button_font = pygame.font.SysFont('Comic Sans MS', 40)
+title_font = pygame.font.SysFont('Graduate', 60)
+button_font = pygame.font.SysFont('Graduate', 40)
 
 # Definindo as opções do menu
 options = ["Iniciar Jogo", "Instruções", "Sair"]
