@@ -21,7 +21,7 @@ title_font = pygame.font.SysFont('Arial', 60)
 button_font = pygame.font.SysFont('Arial', 40)
 
 # Definindo as opções do menu
-options = ["Iniciar Jogo", "Instruções"]
+options = ["Iniciar Jogo", "Instruções", "Sair"]
 
 # Função para desenhar o botão
 def draw_button(text, x, y, width, height, active_color, inactive_color, text_color, action=None):
@@ -50,15 +50,20 @@ def choose_difficulty():
 def show_instructions():
     print("Exibindo as instruções...")
 
+def quit_game():
+    pygame.quit()
+    sys.exit()
 
 # Função principal para exibir o menu
 def main_menu():
     running = True
+    background_image = pygame.image.load('imagens/backgroundInicial.png')
     while running:
-        screen.fill(LIGHT_GRAY)
-        
+
+        # screen.fill(LIGHT_GRAY)
+        screen.blit(background_image, (0, 0))
         # Título
-        title_surface = title_font.render("Menu Inicial", True, DARK_BLUE)
+        title_surface = title_font.render(" ", True, DARK_BLUE)
         title_rect = title_surface.get_rect(center=(WIDTH // 2, HEIGHT // 5))
         screen.blit(title_surface, title_rect)
         
@@ -71,6 +76,7 @@ def main_menu():
         buttons = [
             ("Iniciar Jogo", choose_difficulty),
             ("Instruções", show_instructions),
+            ("Sair", quit_game),
         ]
         
         for i, (text, action) in enumerate(buttons):
