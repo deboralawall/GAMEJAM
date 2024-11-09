@@ -189,6 +189,24 @@ def calculate_stars(elapsed_time):
         return 1
     else:
         return 0
+    
+# Função para desenhar o botão
+def draw_rounded_button(screen, text, x, y, width, height, color, border_radius=15):
+    # Desenha um botão com bordas arredondadas
+    pygame.draw.rect(screen, color, (x, y, width, height), border_radius=border_radius)
+    
+    # Define a fonte do texto
+    font = pygame.font.SysFont('Arial', 30)
+    
+    # Renderiza o texto com cor branca
+    text_surface = font.render(text, True, (255, 255, 255))  # Branco
+    
+    # Centraliza o texto dentro do botão
+    text_x = x + (width - text_surface.get_width()) // 2
+    text_y = y + (height - text_surface.get_height()) // 2
+    
+    # Desenha o texto no botão
+    screen.blit(text_surface, (text_x, text_y))
 
 # Função principal do jogo
 def memory_game(size):
@@ -222,6 +240,17 @@ def memory_game(size):
     while running:
         screen.fill(LIGHT_BLUE)
         screen.blit(background, (0, 0))  # Desenha a imagem de fundo
+
+
+        draw_rounded_button(screen, "Voltar ao Menu", 50, HEIGHT - 80, 200, 50, (0, 0, 255))  # Botão azul
+
+        # Detecta clique no botão
+        if pygame.mouse.get_pressed()[0]:  # Verifica se o botão esquerdo do mouse foi pressionado
+            mouse_x, mouse_y = pygame.mouse.get_pos()  # Obtém posição do mouse
+            if 50 < mouse_x < 250 and HEIGHT - 80 < mouse_y < HEIGHT - 30:
+                # Importa e chama a função do menu principal
+                from choose_difficulty import main_menu
+                main_menu()
 
         # Chama a função para desenhar as cartas, agora com o parâmetro 'show_all' sendo False enquanto o jogo não acabar
         draw_cards(screen, deck, revealed_cards, images, size, show_all=False)
