@@ -57,18 +57,26 @@ def create_deck():
 
 ## Função para desenhar as cartas
 def draw_cards(screen, deck, revealed_cards, images, show_all=False):
+    # Calcula a largura e a altura total do grid de cartas
+    total_width = GRID_SIZE * CARD_WIDTH + (GRID_SIZE - 1) * MARGIN
+    total_height = (len(deck) // GRID_SIZE) * CARD_HEIGHT + (len(deck) // GRID_SIZE - 1) * MARGIN
+
+    # Calcula a posição inicial para centralizar o grid
+    start_x = (WIDTH - total_width) // 2
+    start_y = (HEIGHT - total_height) // 2
+
     for i, card in enumerate(deck):
-        x = (i % GRID_SIZE) * (CARD_WIDTH + MARGIN) + MARGIN
-        y = (i // GRID_SIZE) * (CARD_HEIGHT + MARGIN) + MARGIN
+        x = start_x + (i % GRID_SIZE) * (CARD_WIDTH + MARGIN)
+        y = start_y + (i // GRID_SIZE) * (CARD_HEIGHT + MARGIN)
         rect = pygame.Rect(x, y, CARD_WIDTH, CARD_HEIGHT)
-        
+
         # Se show_all for True, todas as cartas serão mostradas
         if show_all or i in revealed_cards:
             screen.blit(images[card], (x, y))  # Exibir a imagem da carta revelada
         else:
             pygame.draw.rect(screen, BLUE, rect)  # Fundo da carta
             pygame.draw.rect(screen, WHITE, rect, 5)  # Borda da carta
-            
+
 def draw_timer(screen, start_time):
     elapsed_time = pygame.time.get_ticks() // 1000  # Tempo em segundos
     font = pygame.font.SysFont('Arial', 30)
@@ -149,30 +157,44 @@ def memory_game():
             if event.type == pygame.QUIT:
                 running = False
 
-            # Detectando clique do mouse
+                        # Detectando clique do mouse
             if event.type == pygame.MOUSEBUTTONDOWN and second_card is None:
                 x, y = event.pos
-                row = y // (CARD_HEIGHT + MARGIN)
-                col = x // (CARD_WIDTH + MARGIN)
-                card_index = row * GRID_SIZE + col
 
-                # Virar uma carta que ainda não foi virada ou combinada
-                if card_index not in revealed_cards and card_index not in matched_cards:
-                    revealed_cards.append(card_index)
+                # Calcula a posição inicial do grid de cartas
+                total_width = GRID_SIZE * CARD_WIDTH + (GRID_SIZE - 1) * MARGIN
+                total_height = (len(deck) // GRID_SIZE) * CARD_HEIGHT + (len(deck) // GRID_SIZE - 1) * MARGIN
+                start_x = (WIDTH - total_width) // 2
+                start_y = (HEIGHT - total_height) // 2
 
-                    if first_card is None:
-                        first_card = card_index  # Primeira carta virada
-                    else:
-                        second_card = card_index  # Segunda carta virada
-                        last_flip_time = time.time()  # Registra o tempo da segunda virada
+                # Ajusta x e y com a posição inicial do grid
+                adjusted_x = x - start_x
+                adjusted_y = y - start_y
 
-                        # Verifica se as cartas formam um par
-                        if is_match(deck[first_card], deck[second_card]):
-                            matched_cards.append(first_card)
-                            matched_cards.append(second_card)
-                            first_card = None
-                            second_card = None
-                            last_flip_time = None  # Reseta o tempo, pois o par foi encontrado
+                # Verifica se o clique está dentro do grid
+                if 0 <= adjusted_x < total_width and 0 <= adjusted_y < total_height:
+                    col = adjusted_x // (CARD_WIDTH + MARGIN)
+                    row = adjusted_y // (CARD_HEIGHT + MARGIN)
+                    card_index = row * GRID_SIZE + col
+
+                    # Verifica se o índice está dentro dos limites do baralho e se a carta ainda não foi revelada ou combinada
+                    if card_index < len(deck) and card_index not in revealed_cards and card_index not in matched_cards:
+                        revealed_cards.append(card_index)
+
+                        if first_card is None:
+                            first_card = card_index  # Primeira carta virada
+                        else:
+                            second_card = card_index  # Segunda carta virada
+                            last_flip_time = time.time()  # Registra o tempo da segunda virada
+
+                            # Verifica se as cartas formam um par
+                            if is_match(deck[first_card], deck[second_card]):
+                                matched_cards.append(first_card)
+                                matched_cards.append(second_card)
+                                first_card = None
+                                second_card = None
+                                last_flip_time = None  # Reseta o tempo, pois o par foi encontrado
+
 
         # Lógica para virar cartas para baixo se não forem pares
         if first_card is not None and second_card is not None:
