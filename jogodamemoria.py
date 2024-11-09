@@ -49,6 +49,12 @@ def load_star_images():
     star_image = pygame.transform.scale(star_image, (125, 125))  # Redimensionar a estrela
     return star_image
 
+# Função para carregar os sons
+def load_sounds():
+    correct_sound = pygame.mixer.Sound(os.path.join("sons", "win.ogg"))  # Caminho para o som de acerto
+    wrong_sound = pygame.mixer.Sound(os.path.join("sons", "lose.flac"))      # Caminho para o som de erro
+    return correct_sound, wrong_sound
+
 # Função para criar o baralho sem duplicação
 def create_deck():
     deck = [item for pair in card_pairs for item in pair]  # Flatten dos pares predefinidos
@@ -134,6 +140,9 @@ def memory_game():
     revealed_cards = []
     matched_cards = []
 
+    # No início da função principal do jogo
+    correct_sound, wrong_sound = load_sounds()
+
     start_time = pygame.time.get_ticks()  # Tempo de início do jogo
 
     # Loop principal do jogo
@@ -194,6 +203,7 @@ def memory_game():
                                 first_card = None
                                 second_card = None
                                 last_flip_time = None  # Reseta o tempo, pois o par foi encontrado
+                                correct_sound.play()  # Toca o som de acerto
 
 
         # Lógica para virar cartas para baixo se não forem pares
@@ -205,6 +215,7 @@ def memory_game():
                 first_card = None
                 second_card = None
                 last_flip_time = None
+                wrong_sound.play()  # Toca o som de erro
 
         # Verifica se o jogo acabou
         if len(matched_cards) == len(deck):
