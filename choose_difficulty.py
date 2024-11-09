@@ -66,19 +66,25 @@ def choose_difficulty():
 
         # Desenhar botões para cada nível de dificuldade
         button_rects = []
-        y_offset = 200
+        y_offset = 250
+        border_radius = 20  # Definindo um valor para o raio da borda
+
         for difficulty in difficulties.keys():
             button_text = font.render(difficulty, True, WHITE)
             button_rect = pygame.Rect(WIDTH // 2 - 100, y_offset, 200, 60)
             button_rects.append((button_rect, difficulty))
 
-            pygame.draw.rect(screen, BLUE, button_rect)
-            pygame.draw.rect(screen, WHITE, button_rect, 3)
+            # Desenha o botão com bordas arredondadas
+            pygame.draw.rect(screen, BLUE, button_rect, border_radius=border_radius)
+            pygame.draw.rect(screen, WHITE, button_rect, 3, border_radius=border_radius)  # Borda branca
+
+            # Centraliza o texto dentro do botão
             screen.blit(button_text, (button_rect.x + (button_rect.width - button_text.get_width()) // 2,
-                                      button_rect.y + (button_rect.height - button_text.get_height()) // 2))
+                                    button_rect.y + (button_rect.height - button_text.get_height()) // 2))
             y_offset += 100
 
         pygame.display.flip()
+
 
         # Eventos
         for event in pygame.event.get():
