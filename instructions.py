@@ -17,8 +17,8 @@ LIGHT_GRAY = (211, 211, 211)
 DARK_GRAY = (169, 169, 169)
 
 # Fontes
-title_font = pygame.font.SysFont('Comic Sans MS', 60)
-button_font = pygame.font.SysFont('Comic Sans MS', 40)
+title_font = pygame.font.SysFont('Graduate', 60)
+button_font = pygame.font.SysFont('Graduate', 40)
 
 # Função para desenhar o botão
 def draw_button(text, x, y, width, height, active_color, inactive_color, text_color, action=None, border_radius=15):
@@ -60,7 +60,7 @@ def show_instructions():
         button_width, button_height = 300, 60
         back_button_x = (WIDTH - button_width) // 8.6
         back_button_y = HEIGHT - 100
-        draw_button("Voltar ao Menu", back_button_x, back_button_y, button_width, button_height, DARK_BLUE, BLUE, WHITE, back_to_menu)
+        draw_button("Menu", back_button_x, back_button_y, button_width, button_height, DARK_BLUE, BLUE, WHITE, back_to_menu)
         
         pygame.display.flip()
         
