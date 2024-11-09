@@ -33,7 +33,8 @@ card_pairs = [
     ("15.png", "16.png"),
     ("17.png", "18.png"),
     ("19.png", "20.png"),
-    ("21.png", "22.png")
+    ("21.png", "22.png"),
+    ("23.png", "24.png"),
 ]
 
 # Função para carregar as imagens das cartas
