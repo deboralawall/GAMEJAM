@@ -24,6 +24,14 @@ difficulties = {
     "Médio": 4,      # Grade 4x4
 }
 
+def draw_button(text, x, y, width, height, color):
+    button_rect = pygame.Rect(x, y, width, height)
+    pygame.draw.rect(screen, color, button_rect)
+    pygame.draw.rect(screen, WHITE, button_rect, 3)
+    button_text = font.render(text, True, WHITE)
+    screen.blit(button_text, (button_rect.x + (button_rect.width - button_text.get_width()) // 2,
+                              button_rect.y + (button_rect.height - button_text.get_height()) // 2))
+    return button_rect
 
 # Função para escolher a dificuldade
 def choose_difficulty():
@@ -36,6 +44,15 @@ def choose_difficulty():
         # Título
         title_text = font.render("Escolha a Dificuldade", True, BLACK)
         screen.blit(title_text, (WIDTH // 2 - title_text.get_width() // 2, 100))
+
+        draw_button("Voltar ao Menu", 50, HEIGHT - 80, 200, 50, BLUE)
+
+        if pygame.mouse.get_pressed()[0]:
+            mouse_x, mouse_y = pygame.mouse.get_pos()
+            if 50 < mouse_x < 250 and HEIGHT - 80 < mouse_y < HEIGHT - 30:
+                # running = False
+                from telaInicial import main_menu
+                main_menu()
 
         # Desenhar botões para cada nível de dificuldade
         button_rects = []
