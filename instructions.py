@@ -51,7 +51,7 @@ def show_instructions():
     running = True
 
     # Carregar a imagem de fundo das instruções
-    image_path = os.path.join(basepath, "imagens", "backgroundDificuldade.png")
+    image_path = os.path.join(basepath, "imagens", "backgroundInstrucoes.png")
     background_image = pygame.image.load(image_path)
     
     while running:
@@ -61,9 +61,9 @@ def show_instructions():
         screen.blit(background_image, (0, 0))
 
         # Botão para voltar ao menu
-        button_width, button_height = 300, 60
+        button_width, button_height = 200, 40
         back_button_x = (WIDTH - button_width) // 8.6
-        back_button_y = HEIGHT - 100
+        back_button_y = HEIGHT - 65
         draw_button("Menu", back_button_x, back_button_y, button_width, button_height, DARK_BLUE, BLUE, WHITE, back_to_menu)
         
         pygame.display.flip()
