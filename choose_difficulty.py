@@ -16,7 +16,7 @@ BLUE = (0, 0, 255)
 LIGHT_BLUE = (173, 216, 230)
 
 # Fontes
-font = pygame.font.SysFont("Comic Sans MS", 40)
+font = pygame.font.SysFont("Graduate", 40)
 
 # Configurações de dificuldade
 difficulties = {
@@ -39,7 +39,7 @@ def draw_rounded_button(screen, text, x, y, width, height, color, font, border_r
     
     # Retorna o retângulo do botão para verificações de clique
     return pygame.Rect(x, y, width, height)
-font = pygame.font.SysFont('Comic Sans MS', 30)
+font = pygame.font.SysFont('Graduate', 30)
 
 # Função para escolher a dificuldade
 def choose_difficulty():
@@ -61,8 +61,8 @@ def choose_difficulty():
                 from telaInicial import main_menu
                 main_menu()
         # Título
-        title_text = font.render("Escolha a Dificuldade", True, BLACK)
-        screen.blit(title_text, (WIDTH // 2 - title_text.get_width() // 2, 100))
+        # title_text = font.render("Escolha a Dificuldade", True, BLACK)
+        # screen.blit(title_text, (WIDTH // 2 - title_text.get_width() // 2, 100))
 
         # Desenhar botões para cada nível de dificuldade
         button_rects = []
