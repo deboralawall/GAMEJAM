@@ -1,5 +1,8 @@
 import pygame
 import sys
+import os
+
+basepath = os.path.dirname(os.path.abspath(__file__))
 
 # Inicializando o Pygame
 pygame.init()
@@ -48,7 +51,8 @@ def show_instructions():
     running = True
 
     # Carregar a imagem de fundo das instruções
-    background_image = pygame.image.load('imagens/backgroundDificuldade.png')
+    image_path = os.path.join(basepath, "imagens", "backgroundDificuldade.png")
+    background_image = pygame.image.load(image_path)
     
     while running:
         screen.fill(LIGHT_GRAY)
