@@ -49,7 +49,9 @@ def choose_difficulty():
     
 def show_instructions():
     print("Exibindo as instruções...")
-
+    from instructions import show_instructions
+    show_instructions()
+    
 def quit_game():
     pygame.quit()
     sys.exit()
@@ -78,7 +80,6 @@ def main_menu():
             ("Instruções", show_instructions),
             ("Sair", quit_game),
         ]
-        
         for i, (text, action) in enumerate(buttons):
             x = (WIDTH - button_width) // 2
             y = start_y + i * (button_height + gap)
