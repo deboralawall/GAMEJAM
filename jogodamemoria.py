@@ -1,6 +1,7 @@
 import pygame
 import random
 import os
+import time
 
 # Inicializando o Pygame
 pygame.init()
@@ -9,14 +10,13 @@ pygame.init()
 WHITE = (255, 255, 255)
 BLUE = (0, 0, 255)
 LIGHT_BLUE = (173, 216, 230)
-RED = (255, 0, 0)
 
 # Configurações da tela
 WIDTH, HEIGHT = 800, 600
 FPS = 30
-CARD_WIDTH = 150
-CARD_HEIGHT = 200
-MARGIN = 10
+CARD_WIDTH = 100
+CARD_HEIGHT = 150
+MARGIN = 20
 GRID_SIZE = 2  # Ajuste o tamanho conforme o número de pares predefinidos
 
 # Pares de cartas predefinidos com nomes de arquivos de imagem
@@ -73,6 +73,8 @@ def memory_game():
     # Loop principal do jogo
     running = True
     first_card = None
+    second_card = None
+    last_flip_time = None
     while running:
         screen.fill(LIGHT_BLUE)
         draw_cards(screen, deck, revealed_cards, images)
@@ -86,28 +88,39 @@ def memory_game():
                 running = False
 
             # Detectando clique do mouse
-            if event.type == pygame.MOUSEBUTTONDOWN:
+            if event.type == pygame.MOUSEBUTTONDOWN and second_card is None:
                 x, y = event.pos
                 row = y // (CARD_HEIGHT + MARGIN)
                 col = x // (CARD_WIDTH + MARGIN)
                 card_index = row * GRID_SIZE + col
 
+                # Virar uma carta que ainda não foi virada ou combinada
                 if card_index not in revealed_cards and card_index not in matched_cards:
                     revealed_cards.append(card_index)
 
                     if first_card is None:
-                        first_card = card_index
+                        first_card = card_index  # Primeira carta virada
                     else:
-                        # Verifica se o par é válido (imagem e imagem correspondente)
-                        if is_match(deck[first_card], deck[card_index]):
+                        second_card = card_index  # Segunda carta virada
+                        last_flip_time = time.time()  # Registra o tempo da segunda virada
+
+                        # Verifica se as cartas formam um par
+                        if is_match(deck[first_card], deck[second_card]):
                             matched_cards.append(first_card)
-                            matched_cards.append(card_index)
+                            matched_cards.append(second_card)
                             first_card = None
-                        else:
-                            pygame.time.wait(500)  # Espera antes de esconder as cartas
-                            revealed_cards.remove(card_index)
-                            revealed_cards.remove(first_card)
-                            first_card = None
+                            second_card = None
+                            last_flip_time = None  # Reseta o tempo, pois o par foi encontrado
+
+        # Lógica para virar cartas para baixo se não forem pares
+        if first_card is not None and second_card is not None:
+            current_time = time.time()
+            if current_time - last_flip_time >= 2:  # 2 segundos de espera
+                revealed_cards.remove(first_card)
+                revealed_cards.remove(second_card)
+                first_card = None
+                second_card = None
+                last_flip_time = None
 
         # Verifica se o jogo acabou
         if len(matched_cards) == len(deck):
