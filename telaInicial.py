@@ -55,6 +55,11 @@ def show_instructions():
     print("Exibindo as instruções...")
     from instructions import show_instructions
     show_instructions()
+
+def show_history():
+    print("Exibindo a história...")
+    from historia import show_history
+    show_history()
     
 def quit_game():
     pygame.quit()
@@ -82,6 +87,7 @@ def main_menu():
         buttons = [
             ("Iniciar Jogo", choose_difficulty),
             ("Instruções", show_instructions),
+            ("História", show_history),
             ("Sair", quit_game),
         ]
         for i, (text, action) in enumerate(buttons):
