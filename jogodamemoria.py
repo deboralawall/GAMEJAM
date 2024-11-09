@@ -2,11 +2,15 @@ import pygame
 import random
 import os
 import time
+import sys
 
 # Inicializando o Pygame
 pygame.init()
 
-basepath = os.path.dirname(os.path.abspath(__file__))
+def get_resource_path(relative_path):
+    """Retorna o caminho absoluto para arquivos de recursos."""
+    base_path = getattr(sys, '_MEIPASS', os.path.abspath("."))
+    return os.path.join(base_path, relative_path)
 
 # Definindo as cores
 WHITE = (255, 255, 255)
@@ -42,7 +46,7 @@ def load_images():
     images = {}
     for pair in card_pairs:
         for image_name in pair:
-            image_path = os.path.join(basepath, "imagens", image_name)
+            image_path = get_resource_path(os.path.join("imagens", image_name)) 
             images[image_name] = pygame.transform.scale(
                 pygame.image.load(image_path), (CARD_WIDTH, CARD_HEIGHT)
             )
@@ -50,19 +54,19 @@ def load_images():
 
 # Função para carregar a imagem de fundo
 def load_background():
-    background = pygame.image.load(os.path.join(basepath, "imagens", "agua.jpg"))
+    background = pygame.image.load(get_resource_path("imagens/agua.jpg"))
     background = pygame.transform.scale(background, (WIDTH, HEIGHT))  # Redimensiona para o tamanho da tela
     return background
 
 # Função para carregar a imagem das estrelas
 def load_star_images():
-    star_image = pygame.image.load(os.path.join(basepath, "imagens", "star.png"))  # Caminho para a imagem de estrela
+    star_image = pygame.image.load(get_resource_path("imagens/star.png"))  # Caminho para a imagem de estrela
     star_image = pygame.transform.scale(star_image, (125, 125))  # Redimensionar a estrela
     return star_image
 
 # Função para carregar os sons
 def load_sounds():
-    correct_sound = pygame.mixer.Sound(os.path.join(basepath, "sons", "right.ogg"))  # Caminho para o som de acerto
+    correct_sound = pygame.mixer.Sound(get_resource_path("sons/right.ogg")) # Caminho para o som de acerto
     #wrong_sound = pygame.mixer.Sound(os.path.join(basepath, "sons", "lose.flac"))      # Caminho para o som de erro
     return correct_sound
 
