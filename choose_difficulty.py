@@ -22,9 +22,11 @@ font = pygame.font.SysFont("Graduate", 40)
 
 # Configurações de dificuldade
 difficulties = {
-    "Fácil": 2,     # Grade 2x2
-    "Médio": 4,      # Grade 4x4
+    "Fácil": 2,     
+    "Médio": 3,      
+    "Difícil": 4
 }
+
 def draw_rounded_button(screen, text, x, y, width, height, color, font, border_radius=15):
     # Desenha um botão com bordas arredondadas
     pygame.draw.rect(screen, color, (x, y, width, height), border_radius=border_radius)
