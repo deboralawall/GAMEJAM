@@ -1,5 +1,6 @@
 import pygame
 import sys
+import os
 
 basepath = os.path.dirname(os.path.abspath(__file__))
 
