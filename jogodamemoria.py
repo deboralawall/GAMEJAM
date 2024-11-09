@@ -196,7 +196,7 @@ def draw_rounded_button(screen, text, x, y, width, height, color, border_radius=
     pygame.draw.rect(screen, color, (x, y, width, height), border_radius=border_radius)
     
     # Define a fonte do texto
-    font = pygame.font.SysFont('Arial', 30)
+    font = pygame.font.SysFont('Comic Sans MS', 30)
     
     # Renderiza o texto com cor branca
     text_surface = font.render(text, True, (255, 255, 255))  # Branco
@@ -242,7 +242,7 @@ def memory_game(size):
         screen.blit(background, (0, 0))  # Desenha a imagem de fundo
 
 
-        draw_rounded_button(screen, "Voltar ao Menu", 50, HEIGHT - 80, 200, 50, (0, 0, 255))  # Botão azul
+        draw_rounded_button(screen, "Voltar", 50, HEIGHT - 80, 200, 50, (0, 0, 255))  # Botão azul
 
         # Detecta clique no botão
         if pygame.mouse.get_pressed()[0]:  # Verifica se o botão esquerdo do mouse foi pressionado
