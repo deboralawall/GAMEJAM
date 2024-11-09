@@ -1,6 +1,8 @@
 import pygame
 import os
 
+basepath = os.path.dirname(os.path.abspath(__file__))
+
 # Inicializar o Pygame
 pygame.init()
 
@@ -45,7 +47,8 @@ font = pygame.font.SysFont('Graduate', 30)
 def choose_difficulty():
     print("Escolhendo a dificuldade...")
     running = True
-    background_image = pygame.image.load('imagens/backgroundDificuldade.png')
+    image_path = os.path.join(basepath, "imagens", "backgroundDificuldade.png")
+    background_image = pygame.image.load(image_path)
 
     while running:
         #screen.fill(LIGHT_BLUE)
