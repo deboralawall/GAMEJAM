@@ -28,7 +28,12 @@ card_pairs = [
     ("5.png", "6.png"),
     ("7.png", "8.png"),
     ("9.png", "10.png"),
-    # Adicione mais pares conforme necessário
+    ("11.png", "12.png"),
+    ("13.png", "14.png"),
+    ("15.png", "16.png"),
+    ("17.png", "18.png"),
+    ("19.png", "20.png"),
+    ("21.png", "22.png")
 ]
 
 # Função para carregar as imagens das cartas
@@ -57,21 +62,23 @@ def load_star_images():
 # Função para carregar os sons
 def load_sounds():
     correct_sound = pygame.mixer.Sound(os.path.join(basepath, "sons", "right.ogg"))  # Caminho para o som de acerto
-    wrong_sound = pygame.mixer.Sound(os.path.join(basepath, "sons", "lose.flac"))      # Caminho para o som de erro
-    return correct_sound, wrong_sound
+    #wrong_sound = pygame.mixer.Sound(os.path.join(basepath, "sons", "lose.flac"))      # Caminho para o som de erro
+    return correct_sound
 
 # Função para criar o baralho sem duplicação
-def create_deck():
+def create_deck(size):
     # Seleciona dois pares aleatórios de `card_pairs`
-    selected_pairs = random.sample(card_pairs, 2)
+    selected_pairs = random.sample(card_pairs, size)
     # Cria uma lista com as cartas dos pares selecionados e embaralha
     deck = [item for pair in selected_pairs for item in pair]
     random.shuffle(deck)
     return deck
 
 ## Função para desenhar as cartas
-def draw_cards(screen, deck, revealed_cards, images, show_all=False):
+def draw_cards(screen, deck, revealed_cards, images, size, show_all=False):
     # Calcula a largura e a altura total do grid de cartas
+    GRID_SIZE = size
+    print("Size:", size)
     total_width = GRID_SIZE * CARD_WIDTH + (GRID_SIZE - 1) * MARGIN
     total_height = (len(deck) // GRID_SIZE) * CARD_HEIGHT + (len(deck) // GRID_SIZE - 1) * MARGIN
 
@@ -132,7 +139,8 @@ def calculate_stars(elapsed_time):
         return 0
 
 # Função principal do jogo
-def memory_game():
+def memory_game(size):
+    GRID_SIZE = size
     screen = pygame.display.set_mode((WIDTH, HEIGHT))
     pygame.display.set_caption("Memória Aquática")
 
@@ -142,14 +150,14 @@ def memory_game():
     star_image = load_star_images()  # Carregar a imagem de estrela
     
     # Criar o baralho e embaralhar
-    deck = create_deck()
+    deck = create_deck(size)
 
     # Listas de cartas viradas e combinadas
     revealed_cards = []
     matched_cards = []
 
     # No início da função principal do jogo
-    correct_sound, wrong_sound = load_sounds()
+    correct_sound = load_sounds()
 
     start_time = pygame.time.get_ticks()  # Tempo de início do jogo
 
@@ -163,7 +171,7 @@ def memory_game():
         screen.blit(background, (0, 0))  # Desenha a imagem de fundo
 
         # Chama a função para desenhar as cartas, agora com o parâmetro 'show_all' sendo False enquanto o jogo não acabar
-        draw_cards(screen, deck, revealed_cards, images, show_all=False)
+        draw_cards(screen, deck, revealed_cards, images, size, show_all=False)
         draw_timer(screen, start_time)  # Exibe o tempo
         
         pygame.display.flip()
@@ -219,12 +227,12 @@ def memory_game():
         if first_card is not None and second_card is not None:
             current_time = time.time()
             if current_time - last_flip_time >= 2:  # 2 segundos de espera
-                wrong_sound.play()  # Toca o som de erro
                 revealed_cards.remove(first_card)
                 revealed_cards.remove(second_card)
                 first_card = None
                 second_card = None
                 last_flip_time = None
+                #wrong_sound.play()  # Toca o som de erro
 
         # Verifica se o jogo acabou
         if len(matched_cards) == len(deck):
@@ -234,13 +242,14 @@ def memory_game():
             pygame.time.wait(1000)  # Atraso de 1 segundo antes de fechar
 
             # Exibe todas as cartas viradas
-            draw_cards(screen, deck, revealed_cards, images, show_all=True)
+            draw_cards(screen, deck, revealed_cards, images, size, show_all=True)
 
             # Exibe o placar final com as estrelas
             draw_score(screen, stars, star_image)  # Exibe as estrelas
             pygame.display.flip()
             pygame.time.wait(2000)  # Exibe o placar final por 2 segundos
             running = False
+            memory_game(size)
 
     pygame.quit()
 
@@ -251,6 +260,3 @@ def is_match(card1, card2):
         if (card1 == image1 and card2 == image2) or (card1 == image2 and card2 == image1):
             return True
     return False
-
-# Iniciar o jogo
-memory_game()
