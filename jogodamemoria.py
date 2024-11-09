@@ -6,6 +6,8 @@ import time
 # Inicializando o Pygame
 pygame.init()
 
+basepath = os.path.dirname(os.path.abspath(__file__))
+
 # Definindo as cores
 WHITE = (255, 255, 255)
 BLUE = (0, 0, 255)
@@ -31,7 +33,7 @@ def load_images():
     images = {}
     for pair in card_pairs:
         for image_name in pair:
-            image_path = os.path.join("imagens", image_name)
+            image_path = os.path.join(basepath, "imagens", image_name)
             images[image_name] = pygame.transform.scale(
                 pygame.image.load(image_path), (CARD_WIDTH, CARD_HEIGHT)
             )
@@ -39,20 +41,20 @@ def load_images():
 
 # Função para carregar a imagem de fundo
 def load_background():
-    background = pygame.image.load(os.path.join("imagens", "agua.jpg"))
+    background = pygame.image.load(os.path.join(basepath, "imagens", "agua.jpg"))
     background = pygame.transform.scale(background, (WIDTH, HEIGHT))  # Redimensiona para o tamanho da tela
     return background
 
 # Função para carregar a imagem das estrelas
 def load_star_images():
-    star_image = pygame.image.load(os.path.join("imagens", "star.png"))  # Caminho para a imagem de estrela
+    star_image = pygame.image.load(os.path.join(basepath, "imagens", "star.png"))  # Caminho para a imagem de estrela
     star_image = pygame.transform.scale(star_image, (125, 125))  # Redimensionar a estrela
     return star_image
 
 # Função para carregar os sons
 def load_sounds():
-    correct_sound = pygame.mixer.Sound(os.path.join("sons", "win.ogg"))  # Caminho para o som de acerto
-    wrong_sound = pygame.mixer.Sound(os.path.join("sons", "lose.flac"))      # Caminho para o som de erro
+    correct_sound = pygame.mixer.Sound(os.path.join(basepath, "sons", "right.ogg"))  # Caminho para o som de acerto
+    wrong_sound = pygame.mixer.Sound(os.path.join(basepath, "sons", "lose.flac"))      # Caminho para o som de erro
     return correct_sound, wrong_sound
 
 # Função para criar o baralho sem duplicação
@@ -198,24 +200,25 @@ def memory_game():
 
                             # Verifica se as cartas formam um par
                             if is_match(deck[first_card], deck[second_card]):
+                                correct_sound.play()  # Toca o som de acerto
                                 matched_cards.append(first_card)
                                 matched_cards.append(second_card)
                                 first_card = None
                                 second_card = None
                                 last_flip_time = None  # Reseta o tempo, pois o par foi encontrado
-                                correct_sound.play()  # Toca o som de acerto
+                                
 
 
         # Lógica para virar cartas para baixo se não forem pares
         if first_card is not None and second_card is not None:
             current_time = time.time()
             if current_time - last_flip_time >= 2:  # 2 segundos de espera
+                wrong_sound.play()  # Toca o som de erro
                 revealed_cards.remove(first_card)
                 revealed_cards.remove(second_card)
                 first_card = None
                 second_card = None
                 last_flip_time = None
-                wrong_sound.play()  # Toca o som de erro
 
         # Verifica se o jogo acabou
         if len(matched_cards) == len(deck):
