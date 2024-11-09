@@ -14,8 +14,8 @@ LIGHT_BLUE = (173, 216, 230)
 # Configurações da tela
 WIDTH, HEIGHT = 800, 600
 FPS = 30
-CARD_WIDTH = 100
-CARD_HEIGHT = 150
+CARD_WIDTH = 150
+CARD_HEIGHT = 200
 MARGIN = 20
 GRID_SIZE = 2  # Ajuste o tamanho conforme o número de pares predefinidos
 
@@ -37,38 +37,96 @@ def load_images():
             )
     return images
 
+# Função para carregar a imagem de fundo
+def load_background():
+    background = pygame.image.load(os.path.join("imagens", "agua.jpg"))
+    background = pygame.transform.scale(background, (WIDTH, HEIGHT))  # Redimensiona para o tamanho da tela
+    return background
+
+# Função para carregar a imagem das estrelas
+def load_star_images():
+    star_image = pygame.image.load(os.path.join("imagens", "star.png"))  # Caminho para a imagem de estrela
+    star_image = pygame.transform.scale(star_image, (125, 125))  # Redimensionar a estrela
+    return star_image
+
 # Função para criar o baralho sem duplicação
 def create_deck():
     deck = [item for pair in card_pairs for item in pair]  # Flatten dos pares predefinidos
     random.shuffle(deck)  # Embaralha o baralho mantendo os pares predefinidos
     return deck
 
-# Função para desenhar as cartas
-def draw_cards(screen, deck, revealed_cards, images):
+## Função para desenhar as cartas
+def draw_cards(screen, deck, revealed_cards, images, show_all=False):
     for i, card in enumerate(deck):
         x = (i % GRID_SIZE) * (CARD_WIDTH + MARGIN) + MARGIN
         y = (i // GRID_SIZE) * (CARD_HEIGHT + MARGIN) + MARGIN
         rect = pygame.Rect(x, y, CARD_WIDTH, CARD_HEIGHT)
-        if i in revealed_cards:
+        
+        # Se show_all for True, todas as cartas serão mostradas
+        if show_all or i in revealed_cards:
             screen.blit(images[card], (x, y))  # Exibir a imagem da carta revelada
         else:
             pygame.draw.rect(screen, BLUE, rect)  # Fundo da carta
             pygame.draw.rect(screen, WHITE, rect, 5)  # Borda da carta
+            
+def draw_timer(screen, start_time):
+    elapsed_time = pygame.time.get_ticks() // 1000  # Tempo em segundos
+    font = pygame.font.SysFont('Arial', 30)
+    time_text = font.render(f'{elapsed_time} seg', True, WHITE)
+    screen.blit(time_text, (WIDTH - 150, 10))  # Posiciona no canto superior direito
+
+# Função para desenhar o placar de estrelas com a mensagem de parabéns
+def draw_score(screen, stars, star_image):
+    # Calcular o espaço total necessário para as estrelas na horizontal
+    total_width = stars * star_image.get_width() + (stars - 1) * 20  # 20 é o espaçamento entre as estrelas
+    start_x = (WIDTH - total_width) // 2  # Calcular a posição inicial para centralizar as estrelas na horizontal
+    
+    # Calcular o espaço total necessário para as estrelas na vertical
+    total_height = star_image.get_height()  # Altura de uma estrela
+    start_y = (HEIGHT - total_height) // 2  # Calcular a posição inicial para centralizar as estrelas na vertical
+
+    # Desenhar a mensagem de parabéns
+    font = pygame.font.SysFont('Arial', 50)
+    message_text = font.render("Parabéns!", True, (255, 255, 255))  # Texto branco
+    message_width = message_text.get_width()
+    message_x = (WIDTH - message_width) // 2  # Centraliza a mensagem horizontalmente
+    message_y = start_y - 60  # Posiciona a mensagem um pouco acima das estrelas
+
+    screen.blit(message_text, (message_x, message_y))  # Exibe a mensagem de Parabéns!
+
+    # Desenhar as estrelas na tela
+    for i in range(stars):
+        screen.blit(star_image, (start_x + i * (star_image.get_width() + 20), start_y))
+
+# Função para calcular as estrelas com base no tempo
+def calculate_stars(elapsed_time):
+    if elapsed_time <= 20:
+        return 3
+    elif elapsed_time <= 40:
+        return 2
+    elif elapsed_time <= 60:
+        return 1
+    else:
+        return 0
 
 # Função principal do jogo
 def memory_game():
     screen = pygame.display.set_mode((WIDTH, HEIGHT))
-    pygame.display.set_caption("Memoria Aquática")
+    pygame.display.set_caption("Memória Aquática")
 
     # Carregar as imagens
     images = load_images()
-
+    background = load_background()  # Carregar a imagem de fundo
+    star_image = load_star_images()  # Carregar a imagem de estrela
+    
     # Criar o baralho e embaralhar
     deck = create_deck()
 
     # Listas de cartas viradas e combinadas
     revealed_cards = []
     matched_cards = []
+
+    start_time = pygame.time.get_ticks()  # Tempo de início do jogo
 
     # Loop principal do jogo
     running = True
@@ -77,7 +135,11 @@ def memory_game():
     last_flip_time = None
     while running:
         screen.fill(LIGHT_BLUE)
-        draw_cards(screen, deck, revealed_cards, images)
+        screen.blit(background, (0, 0))  # Desenha a imagem de fundo
+
+        # Chama a função para desenhar as cartas, agora com o parâmetro 'show_all' sendo False enquanto o jogo não acabar
+        draw_cards(screen, deck, revealed_cards, images, show_all=False)
+        draw_timer(screen, start_time)  # Exibe o tempo
         
         pygame.display.flip()
         pygame.time.Clock().tick(FPS)
@@ -124,11 +186,22 @@ def memory_game():
 
         # Verifica se o jogo acabou
         if len(matched_cards) == len(deck):
-            print("Você venceu!")
+            elapsed_time = (pygame.time.get_ticks() - start_time) // 1000  # Tempo total do jogo em segundos
+            stars = calculate_stars(elapsed_time)  # Calcula as estrelas
+            print(f"Você venceu! Tempo: {elapsed_time} segundos, Estrelas: {stars}")
             pygame.time.wait(1000)  # Atraso de 1 segundo antes de fechar
+
+            # Exibe todas as cartas viradas
+            draw_cards(screen, deck, revealed_cards, images, show_all=True)
+
+            # Exibe o placar final com as estrelas
+            draw_score(screen, stars, star_image)  # Exibe as estrelas
+            pygame.display.flip()
+            pygame.time.wait(2000)  # Exibe o placar final por 2 segundos
             running = False
 
     pygame.quit()
+
 
 # Função para verificar se dois itens formam um par
 def is_match(card1, card2):
