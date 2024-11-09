@@ -25,6 +25,9 @@ GRID_SIZE = 2  # Ajuste o tamanho conforme o número de pares predefinidos
 card_pairs = [
     ("1.png", "2.png"),
     ("3.png", "4.png"),
+    ("5.png", "6.png"),
+    ("7.png", "8.png"),
+    ("9.png", "10.png"),
     # Adicione mais pares conforme necessário
 ]
 
@@ -59,8 +62,11 @@ def load_sounds():
 
 # Função para criar o baralho sem duplicação
 def create_deck():
-    deck = [item for pair in card_pairs for item in pair]  # Flatten dos pares predefinidos
-    random.shuffle(deck)  # Embaralha o baralho mantendo os pares predefinidos
+    # Seleciona dois pares aleatórios de `card_pairs`
+    selected_pairs = random.sample(card_pairs, 2)
+    # Cria uma lista com as cartas dos pares selecionados e embaralha
+    deck = [item for pair in selected_pairs for item in pair]
+    random.shuffle(deck)
     return deck
 
 ## Função para desenhar as cartas
