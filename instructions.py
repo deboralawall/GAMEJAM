@@ -2,7 +2,10 @@ import pygame
 import sys
 import os
 
-basepath = os.path.dirname(os.path.abspath(__file__))
+def get_resource_path(relative_path):
+    """Retorna o caminho absoluto para arquivos de recursos."""
+    base_path = getattr(sys, '_MEIPASS', os.path.abspath("."))
+    return os.path.join(base_path, relative_path)
 
 # Inicializando o Pygame
 pygame.init()
@@ -51,8 +54,7 @@ def show_instructions():
     running = True
 
     # Carregar a imagem de fundo das instruções
-    image_path = os.path.join(basepath, "imagens", "backgroundInstrucoes.png")
-    background_image = pygame.image.load(image_path)
+    background_image = pygame.image.load(get_resource_path("imagens/backgroundInstrucoes.png"))
     
     while running:
         screen.fill(LIGHT_GRAY)
